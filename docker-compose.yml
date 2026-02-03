@@ -1,0 +1,24 @@
+services:
+  web:
+    image: odoo:19.0
+    container_name: odoo19_marlor_web
+    user: "101:101"
+    depends_on:
+      - odoo19_marlor_db
+    ports:
+      - "8030:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+      - /srv/odoo/filestore:/var/lib/odoo
+      - /srv/odoo/logs:/var/log/odoo
+
+  odoo19_marlor_db:
+    image: postgres:16
+    container_name: odoo19_marlor_db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: myodoo
+    volumes:
+      - /srv/odoo/postgres:/var/lib/postgresql/data
