@@ -14,7 +14,29 @@ import mimetypes
 from urllib.request import urlopen
 
 from odoo.exceptions import ValidationError
-from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
+# Intentar usar las tools oficiales si están disponibles.
+try:
+    from odoo.addons.web_editor.tools import get_video_embed_code, get_video_thumbnail
+except Exception:
+    # En algunas builds (p.ej. docker) web_editor no viene; fallback liviano para no bloquear la instalación.
+    import re
+
+    def get_video_embed_code(video_url):
+        if not video_url:
+            return False
+        m = re.search(r'(?:youtu\.be/|youtube\.com/(?:watch\?v=|embed/))([A-Za-z0-9_-]{6,})', video_url)
+        if m:
+            vid = m.group(1)
+            return f'<iframe src="https://www.youtube.com/embed/{vid}" frameborder="0" allowfullscreen="1"></iframe>'
+        m = re.search(r'vimeo\.com/(?:video/)?(\d+)', video_url)
+        if m:
+            vid = m.group(1)
+            return f'<iframe src="https://player.vimeo.com/video/{vid}" frameborder="0" allowfullscreen="1"></iframe>'
+        return f'<a href="{video_url}" target="_blank" rel="noopener noreferrer">{video_url}</a>'
+
+    def get_video_thumbnail(video_url):
+        return False
+
 
 from datetime import datetime
 

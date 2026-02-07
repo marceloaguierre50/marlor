@@ -70,13 +70,13 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                <filter name="filter_to_purchase" position="after">
+                <xpath expr="//search" position="inside">
                   <field name="meli_id" string="MercadoLibre Id (ML Id)" filter_domain="[('meli_id','ilike',self)]"/>
                   <separator/>
                   <filter string="MercadoLibre, A publicar" name="meli_pub_active2" domain="[('meli_pub','=',True)]"/>
                   <filter string="MercadoLibre, Publicados" name="meli_id_active2" domain="[('meli_id','ilike','M')]"/>
                   <!--filter string="MercadoLibre, Activos" name="meli_status_active" domain="[('meli_status','ilike','active')]"/-->
-                </filter>
+                </xpath>
             </field>
         </record>
 
@@ -558,13 +558,14 @@
             <!--field name="search_view_id" ref="producteca_sale_order_search_view" /-->
         </record>
 
-        <menuitem id="menu_meli" name="MercadoLibre" parent="sale.sale_menu_root" sequence="16"/>
+        <menuitem id="menu_meli" name="MercadoLibre" parent="sale.sale_menu_root" sequence="16" groups="meli_oerp.group_mercadolibre_manager"/>
 
 
         <menuitem id="menu_meli_oerp_pricelist_items"
             action="action_meli_oerp_pricelist_items_tree"
             parent="menu_meli"
-            name="Precios" sequence="9"/>
+            name="Precios" sequence="9"
+            groups="meli_oerp.group_mercadolibre_manager"/>
 
 
     </data>
